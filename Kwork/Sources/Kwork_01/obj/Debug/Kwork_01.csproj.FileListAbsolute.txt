@@ -1,0 +1,14 @@
+D:\GameEngine\Kwork_Sources\Kwork_01\obj\Debug\Kwork_01.csprojAssemblyReference.cache
+D:\GameEngine\Kwork_Sources\Kwork_01\obj\Debug\Kwork_01.exe.config
+D:\GameEngine\Kwork_Sources\Kwork_01\obj\Debug\Kwork_01.csproj.CoreCompileInputs.cache
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\Kwork_01.exe.config
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\Kwork_01.exe
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\Kwork_01.pdb
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\GLWpfControl.dll
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\OpenTK.dll
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\GLWpfControl.pdb
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\OpenTK.pdb
+D:\GameEngine\Kwork_Sources\Kwork_01\bin\Debug\OpenTK.xml
+D:\GameEngine\Kwork_Sources\Kwork_01\obj\Debug\Kwork_01.csproj.CopyComplete
+D:\GameEngine\Kwork_Sources\Kwork_01\obj\Debug\Kwork_01.exe
+D:\GameEngine\Kwork_Sources\Kwork_01\obj\Debug\Kwork_01.pdb
