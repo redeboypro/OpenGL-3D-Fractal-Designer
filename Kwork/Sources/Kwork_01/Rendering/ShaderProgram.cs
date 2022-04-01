@@ -2,7 +2,7 @@
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace SimpleGameStudio.Rendering
+namespace Kwork_01.Rendering
 {
     public abstract class ShaderProgram
     {
@@ -19,7 +19,6 @@ namespace SimpleGameStudio.Rendering
             BindAttributes();
             GL.LinkProgram(Id);
             GL.ValidateProgram(Id);
-            GetAllUniformLocations();
         }
 
         public void Clear()
@@ -31,8 +30,6 @@ namespace SimpleGameStudio.Rendering
             GL.DeleteShader(FragmentShader);
             GL.DeleteProgram(Id);
         }
-
-        protected abstract void GetAllUniformLocations();
 
         public int GetUniformLocation(string uniformName)
         {

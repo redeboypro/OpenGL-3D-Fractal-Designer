@@ -1,8 +1,11 @@
 ﻿using System;
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Kwork_01.Rendering;
+using Kwork_01.Rendering.PostProcessing;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Wpf;
@@ -14,6 +17,9 @@ namespace Kwork_01
         private GLWpfControl glControl;
         private GLWpfControlSettings glOptions;
         private Toolbox toolbox;
+        private GraphicsUserControl guiControl;
+
+        private float mouseInit = 0.0f;
 
         public Display()
         {
@@ -31,6 +37,7 @@ namespace Kwork_01
 
             var canvas = new Canvas();
             var grid = new Grid();
+            guiControl = new GraphicsUserControl(canvas);
             
             Content = grid;
             
@@ -39,96 +46,74 @@ namespace Kwork_01
 
             glControl.Start(glOptions);
 
+            GL.Enable(EnableCap.TextureCubeMap);
+            GL.Enable(EnableCap.Texture2D);
+
             toolbox = new Toolbox();
             GL.Enable(EnableCap.DepthTest);
+            
 
-            
-            /*
-             * Rotation Slider
-             */
-            var rotation_slider = new Slider()
-            {
-                Minimum = 0, Maximum = 30, Width = 150
-            };
-            rotation_slider.ValueChanged += (object s, RoutedPropertyChangedEventArgs<double> e) =>
-            {
-                toolbox.GetRenderer().Rotation = (float)e.NewValue/10;
-            };
-            canvas.Children.Add(rotation_slider);
-            
-            
             /*
              * Interpolation Slider
              */
-            var interpolation_slider = new Slider()
-            {
-                Minimum = 10, Maximum = 100, Width = 150, Margin = new Thickness(0,20,0,0)
-            };
-            interpolation_slider.ValueChanged += (object s, RoutedPropertyChangedEventArgs<double> e) =>
-            {
-                toolbox.GetRenderer().Interpolation = (float)e.NewValue;
-            };
-            canvas.Children.Add(interpolation_slider);
+            guiControl.Slider(5,20, toolbox.GetRenderer().Interpolate, 15, 15);
             
             
             /*
              * Red Color
              */
-            var r_slider = new Slider()
-            {
-                Minimum = 10, Maximum = 100, Width = 150, Margin = new Thickness(0,40,0,0)
-            };
-            r_slider.ValueChanged += (object s, RoutedPropertyChangedEventArgs<double> e) =>
-            {
-                toolbox.GetRenderer().r = (float)e.NewValue/100f;
-            };
-            canvas.Children.Add(r_slider);
+            guiControl.Slider(0, 255, toolbox.GetRenderer().PaintRed, 1, 255);
             
             
             /*
-             * Red Color
+             * Green Color
              */
-            var g_slider = new Slider()
-            {
-                Minimum = 10, Maximum = 100, Width = 150, Margin = new Thickness(0,60,0,0)
-            };
-            g_slider.ValueChanged += (object s, RoutedPropertyChangedEventArgs<double> e) =>
-            {
-                toolbox.GetRenderer().g = (float)e.NewValue/100f;
-            };
-            canvas.Children.Add(g_slider);
+            guiControl.Slider(0, 255, toolbox.GetRenderer().PaintGreen);
             
             
             /*
-             * Red Color
+             * Blue Color
              */
-            var b_slider = new Slider()
-            {
-                Minimum = 10, Maximum = 100, Width = 150, Margin = new Thickness(0,80,0,0)
-            };
-            b_slider.ValueChanged += (object s, RoutedPropertyChangedEventArgs<double> e) =>
-            {
-                toolbox.GetRenderer().b = (float)e.NewValue/100f;
-            };
-            canvas.Children.Add(b_slider);
+            guiControl.Slider(0, 255, toolbox.GetRenderer().PaintBlue);
+            
+            guiControl.Button(toolbox.GetRenderer().ChangeMode, "Change Mode");
 
+            MouseMove += displayControl_OnDrag;
 
             glControl.Render += glControl_OnRender;
             ShowDialog();
         }
-        
-        /*private void glControl_KeyDown(object sender, KeyEventArgs e)
+
+        public void displayControl_OnDrag(object s, MouseEventArgs e)
         {
-            if (Key.Up == e.Key)
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                toolbox.GetRenderer().Interpolation += 0.1f;
+                var delta = (float)GetNormalizedCursor().X - mouseInit;
+                Renderer.Rotation += delta;
             }
-        }*/
+            mouseInit = (float)GetNormalizedCursor().X;
+        }
 
         private void glControl_OnRender(TimeSpan delta) {
             GL.ClearColor(Color4.White);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
             toolbox.GetRenderer().Draw();
+            toolbox.GetRoomRenderer().Draw();
+
+        }
+        
+        public Point GetNormalizedCursor()
+        {
+            var origin = GetCursorOrigin();
+            var x = (2.0f * origin.X) / 800f - 1;
+            var y = (2.0f * origin.Y) / 600f - 1;
+            return new Point(x,y);
+        }
+        
+        public Point GetCursorOrigin()
+        {
+            return Mouse.GetPosition(this);
         }
     }
 }

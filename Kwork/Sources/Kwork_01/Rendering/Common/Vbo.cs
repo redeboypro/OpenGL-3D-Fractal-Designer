@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 
-namespace SimpleGameStudio.Rendering.Common
+namespace Kwork_01.Rendering.Common
 {
     public class Vbo<T> where T : struct
     {

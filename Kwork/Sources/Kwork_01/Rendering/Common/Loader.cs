@@ -3,13 +3,14 @@ using System.Globalization;
 using System.IO;
 using OpenTK;
 
-namespace SimpleGameStudio.Rendering.Common
+namespace Kwork_01.Rendering.Common
 {
     public class Vertex
     {
         private static int NO_INDEX = -1;
         public Vector3 position;
         public int uv_index = NO_INDEX;
+        public int normal_index = NO_INDEX;
         public int vertex_index;
         public float lenght;
         private Vertex duplicateVertex = null;
@@ -101,11 +102,12 @@ namespace SimpleGameStudio.Rendering.Common
 
             var TextureCoords = new Vector2[vertices.Count];
             var Vertices = new Vector3[vertices.Count];
+            var Normals = new Vector3[vertices.Count];
 
-            storeData(vertices, uv, Vertices, TextureCoords);
+            storeData(vertices, uv, normals, Vertices, TextureCoords, Normals);
 
             var Indices = indices.ToArray();
-            return new Geometry(Vertices, TextureCoords, Indices);
+            return new Geometry(Vertices, TextureCoords, Normals, Indices);
         }
 
         public static void setup(string[] vertexData, List<Vertex> vertices, List<int> indices)
@@ -113,19 +115,21 @@ namespace SimpleGameStudio.Rendering.Common
             int index = int.Parse(vertexData[0]) - 1;
             Vertex currentVertex = vertices[index];
             int textureIndex = int.Parse(vertexData[1]) - 1;
+            int normalIndex = int.Parse(vertexData[2]) - 1;
             if (!currentVertex.isSet())
             {
                 currentVertex.uv_index = textureIndex;
+                currentVertex.normal_index = normalIndex;
                 indices.Add(index);
             }
             else
             {
-                initVertex(currentVertex, textureIndex, indices,
+                initVertex(currentVertex, textureIndex, normalIndex, indices,
                     vertices);
             }
         }
 
-        private static void initVertex(Vertex previousVertex, int newTextureIndex, List<int> indices,
+        private static void initVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex, List<int> indices,
             List<Vertex> vertices)
         {
             if (previousVertex.hasSameUV(newTextureIndex))
@@ -138,12 +142,13 @@ namespace SimpleGameStudio.Rendering.Common
                 if (anotherVertex != null)
                 {
                     initVertex(anotherVertex, newTextureIndex,
-                        indices, vertices);
+                        newNormalIndex, indices, vertices);
                 }
                 else
                 {
                     Vertex duplicateVertex = new Vertex(vertices.Count, previousVertex.position);
                     duplicateVertex.uv_index = newTextureIndex;
+                    duplicateVertex.normal_index = newNormalIndex;
                     previousVertex.setDuplicateVertex(duplicateVertex);
                     vertices.Add(duplicateVertex);
                     indices.Add(duplicateVertex.vertex_index);
@@ -151,16 +156,18 @@ namespace SimpleGameStudio.Rendering.Common
             }
         }
 
-        private static void storeData(List<Vertex> vertices, List<Vector2> textures,
-            Vector3[] verticesArray, Vector2[] texturesArray)
+        private static void storeData(List<Vertex> vertices, List<Vector2> textures, List<Vector3> normals,
+            Vector3[] verticesArray, Vector2[] texturesArray, Vector3[] normalsArray)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
                 Vertex currentVertex = vertices[i];
                 Vector3 position = currentVertex.position;
                 Vector2 textureCoord = textures[currentVertex.uv_index];
+                Vector3 normal = normals[currentVertex.normal_index];
                 verticesArray[i] = position;
                 texturesArray[i] = textureCoord;
+                normalsArray[i] = normal;
             }
         }
     }

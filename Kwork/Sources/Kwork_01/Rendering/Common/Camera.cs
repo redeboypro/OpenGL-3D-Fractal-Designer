@@ -1,11 +1,11 @@
 ﻿using System.Windows.Media.Imaging;
 using OpenTK;
 
-namespace SimpleGameStudio.Rendering.Common
+namespace Kwork_01.Rendering.Common
 {
     public class Camera
     {
-        public Vector3 Position = Vector3.UnitZ * 6;
+        public Vector3 Position = Vector3.UnitZ * 5;
         public Quaternion Orientation = Quaternion.Identity;
         private Matrix4 Projection;
 
@@ -22,6 +22,7 @@ namespace SimpleGameStudio.Rendering.Common
 
         public Camera()
         {
+            Orientation = Matrix4.LookAt(Position, Vector3.Zero, Vector3.UnitY).ExtractRotation();
             GenerateProjection();
         }
         

@@ -1,12 +1,13 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace SimpleGameStudio.Rendering.Common
+namespace Kwork_01.Rendering.Common
 {
     public class Geometry
     {
         private Vbo<Vector3> Vertices;
         private Vbo<Vector2> TexCoords;
+        private Vbo<Vector3> Normals;
         private Vbo<int> Indices;
         
         private int VertexCount, DataId;
@@ -36,12 +37,13 @@ namespace SimpleGameStudio.Rendering.Common
             return VertexCount;
         }
         
-        public Geometry(Vector3[] verts, Vector2[] textures, int[] tris)
+        public Geometry(Vector3[] verts, Vector2[] textures, Vector3[] normals, int[] tris)
         {
             CreateDataArrayObject();
-            Indices = new Vbo<int>(2,1, tris, BufferTarget.ElementArrayBuffer);
+            Indices = new Vbo<int>(3,1, tris, BufferTarget.ElementArrayBuffer);
             Vertices = new Vbo<Vector3>(0, 3, verts, BufferTarget.ArrayBuffer);
             TexCoords = new Vbo<Vector2>(1, 2, textures, BufferTarget.ArrayBuffer);
+            Normals = new Vbo<Vector3>(2, 3, normals, BufferTarget.ArrayBuffer);
             GL.BindVertexArray(0);
             VertexCount = tris.Length;
         }
